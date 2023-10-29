@@ -35,7 +35,9 @@ jobs:
           aws-region: sa-east-1
 
       - name: Create ECR repository
-        run: REPO_NAME="mi-aplicacion-repo" aws ecr create-repository --repository-name $REPO_NAME
+        run: |
+          REPO_NAME="mi-aplicacion-repo"
+          aws ecr create-repository --repository-name $REPO_NAME
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
