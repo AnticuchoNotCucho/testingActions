@@ -28,21 +28,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: sa-east-1
 
-      #- name: Check if ECR repository exists
-      #  id: ecr-check
-      #  continue-on-error: true
-      #  run: |
-      #    REPO_NAME="mi-aplicacion-repo"
-      #    aws ecr describe-repositories --repository-names $REPO_NAME
+      - name: Check if ECR repository exists
+        id: ecr-check
+        continue-on-error: true
+        run: |
+          REPO_NAME="mi-aplicacion-repo"
+          aws ecr describe-repositories --repository-names $REPO_NAME
 
-      #- name: Create ECR repository if not exists
-      #  if: steps.ecr-check.outcome == 'failure'
-      #  run: |
-      #    REPO_NAME="mi-aplicacion-repo"
-       #   aws ecr create-repository --repository-name $REPO_NAME
+      - name: Create ECR repository if not exists
+        if: steps.ecr-check.outcome == 'failure'
+        run: |
+          REPO_NAME="mi-aplicacion-repo"
+          aws ecr create-repository --repository-name $REPO_NAME
 
-      #- name: Login to Amazon ECR
-      #  uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: List files in workspace
         run: ls -la -la target
@@ -52,6 +52,9 @@ jobs:
 
       - name: Build Docker Image
         run: docker build -t mi-aplicacion .
+
+      - name: Debug AWS_ACCOUNT_ID
+        run: echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}"
 
       - name: Tag Docker image
         run: docker tag mi-aplicacion:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.sa-east-1.amazonaws.com/mi-aplicacion-repo:latest
