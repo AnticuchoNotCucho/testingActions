@@ -31,7 +31,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: sa-east-1
 
-      - name: Create ECR repository
+      - name: Check if ECR repository exists
+        id: ecr-check
+        continue-on-error: true
+        run: |
+          REPO_NAME="mi-aplicacion-repo"
+          aws ecr describe-repositories --repository-names $REPO_NAME
+
+      - name: Create ECR repository if not exists
+        if: steps.ecr-check.outcome == 'failure'
         run: |
           REPO_NAME="mi-aplicacion-repo"
           aws ecr create-repository --repository-name $REPO_NAME
