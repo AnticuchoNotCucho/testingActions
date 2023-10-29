@@ -5,7 +5,7 @@ FROM openjdk:11-jre-slim
 EXPOSE 8080
 
 # Copiar el archivo JAR al contenedor
-COPY mi-aplicacion.jar mi-aplicacion.jar
+COPY target/mi-aplicacion.jar mi-aplicacion.jar
 
 # Comando para ejecutar la aplicación
 ENTRYPOINT ["java", "-jar", "/mi-aplicacion.jar"]
